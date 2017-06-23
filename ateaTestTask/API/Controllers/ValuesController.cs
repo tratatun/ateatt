@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
@@ -26,11 +27,11 @@ namespace API.Controllers
 
         // POST api/values
         [HttpPost]
-        
-        public string Post([FromBody]List<ApplicationInfo> value)
+        public string Post([FromBody]ApplicationInfo[] list)
         {
-            Console.WriteLine("Ok '" + value + "'");
-            return "Ok '" + value + "'";
+            //Request.
+            Console.WriteLine("Ok '" + (list != null ? "true" : "false") + "' ");
+            return "Ok '" + (list != null ? "true" : "false") + "'";
         }
 
         // PUT api/values/5
