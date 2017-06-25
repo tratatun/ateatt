@@ -14,7 +14,7 @@ namespace API.BusinessLogic
         {
             appInfoList.ForEach(appInfo =>
             {
-                if (appInfo.Publisher.IndexOf("microsoft", StringComparison.CurrentCultureIgnoreCase) > -1)
+                if (!string.IsNullOrWhiteSpace(appInfo.Publisher) && appInfo.Publisher.IndexOf("microsoft", StringComparison.CurrentCultureIgnoreCase) > -1)
                 {
                     appInfo.Publisher = "Microsoft Corporation";
                 }

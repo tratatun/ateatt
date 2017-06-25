@@ -9,10 +9,13 @@ namespace DataAccess
         public DbSet<ClientComputer> ClientComputers { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApplicationInfoContext()
         {
-            optionsBuilder.UseSqlServer("Server=TTN;Database=ateatt;User Id=sa;Password=root;");
-            base.OnConfiguring(optionsBuilder);
+        }
+        public ApplicationInfoContext(DbContextOptions<ApplicationInfoContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
         }
     }
 }
