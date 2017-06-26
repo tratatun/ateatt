@@ -6,6 +6,6 @@ namespace Domain
     {
         public int Id { get; set; }
         public string PublisherName { get; set; }
-        public  List<ApplicationInfo> ApplicationInfos { get; set; }
+        public List<ApplicationInfo> ApplicationInfos { get; set; }
     }
 }

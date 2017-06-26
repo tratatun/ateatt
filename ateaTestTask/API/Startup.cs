@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
+using EFLogging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,10 @@ namespace API
         {
             // Add framework services.
             services.AddMvc();
-            //services.AddEntityFrameworkSqlServer().AddDbContext<ApplicationInfoContext>(option =>
-            //{
-            //    option.UseSqlServer("Server=TTN;Database=ateatt;User Id=sa;Password=root;");//,asm => asm.MigrationsAssembly("DataAccess"));
-            //});
+            services.AddEntityFrameworkSqlServer().AddDbContext<ApplicationInfoContext>(option =>
+            {
+                option.UseSqlServer(Configuration.GetConnectionString("AppsInfoDb"));//,asm => asm.MigrationsAssembly("DataAccess"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +44,8 @@ namespace API
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            loggerFactory.AddProvider(new MyLoggerProvider());
 
             app.UseMvc();
         }

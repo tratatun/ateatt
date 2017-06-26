@@ -1,5 +1,5 @@
 ﻿$username = 'TTN\ttn' #'alexander.nikiforov@softwarium.net'
-$password = 'Da1mpDa2mp' #'Da1mpDa2mpDa1mp'
+$password = 'Da1mpDa2mp' #''
 $compName = 'ttn' #'ttn.softwarium.net'
 $APIURL = 'http://localhost:5000/api/values'
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList @($username,(ConvertTo-SecureString -String $password -AsPlainText -Force))
