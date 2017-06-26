@@ -8,9 +8,10 @@ using DataAccess;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationInfoContext))]
-    partial class ApplicationInfoContextModelSnapshot : ModelSnapshot
+    [Migration("20170626013357_ClientComputerLastUpdated")]
+    partial class ClientComputerLastUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -21,13 +22,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ClientComputerId");
+                    b.Property<int?>("ClientComputerId");
 
                     b.Property<string>("DisplayName");
 
                     b.Property<string>("DisplayVersion");
 
                     b.Property<DateTime>("InstallDate");
+
+                    b.Property<int>("PSComputerId");
 
                     b.Property<int>("PublisherId");
 
@@ -70,8 +73,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Domain.ClientComputer")
                         .WithMany("ApplicationInfos")
-                        .HasForeignKey("ClientComputerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClientComputerId");
 
                     b.HasOne("Domain.Publisher")
                         .WithMany("ApplicationInfos")

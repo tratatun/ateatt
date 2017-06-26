@@ -9,6 +9,6 @@ namespace Domain
         public string DisplayVersion { get; set; }
         public DateTime InstallDate { get; set; }
         public int PublisherId { get; set; }
-        public int PSComputerId { get; set; }
+        public int ClientComputerId { get; set; }
     }
 }

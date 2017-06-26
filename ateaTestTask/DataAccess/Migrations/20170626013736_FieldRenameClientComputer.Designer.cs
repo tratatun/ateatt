@@ -8,9 +8,10 @@ using DataAccess;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationInfoContext))]
-    partial class ApplicationInfoContextModelSnapshot : ModelSnapshot
+    [Migration("20170626013736_FieldRenameClientComputer")]
+    partial class FieldRenameClientComputer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

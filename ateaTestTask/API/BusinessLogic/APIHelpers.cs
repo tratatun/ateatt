@@ -18,11 +18,15 @@ namespace API.BusinessLogic
                 {
                     appInfo.Publisher = "Microsoft Corporation";
                 }
-               
+                if (!string.IsNullOrWhiteSpace(appInfo.Publisher) && appInfo.Publisher.IndexOf("intel", StringComparison.CurrentCultureIgnoreCase) > -1)
+                {
+                    appInfo.Publisher = "Intel Corporation";
+                }
+                appInfo.InstallDateParsed = GetInstallDateTime(appInfo.InstallDate);
             });
         }
 
-        public static DateTime GetInstallDateTime(string installDateStr)
+        private static DateTime GetInstallDateTime(string installDateStr)
         {
             Regex dateRegex = new Regex(Constants.DATE_FORMAT_REGEX, RegexOptions.Singleline);
             if (!string.IsNullOrWhiteSpace(installDateStr) && dateRegex.IsMatch(installDateStr))
