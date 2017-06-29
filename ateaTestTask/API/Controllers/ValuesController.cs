@@ -18,33 +18,40 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        //[AutoValidateAntiforgeryToken]
+        public IEnumerable<object> Get(string computerName)
         {
-            return new string[] {"value1", "value2"};
+            ApplicationInfoContext dbContext = new ApplicationInfoContext();
+            ClientComputer comp = dbContext.ClientComputers.FirstOrDefault(x => x.ComputerName == computerName);
+            IEnumerable<Publisher> publishers = new List<Publisher>();
+            if (comp != null)
+            {
+                dbContext.Entry(comp).Collection(c => c.ApplicationInfos).Load();
+                publishers = dbContext.Publishers.Where(p => comp.ApplicationInfos.Any(ai => p.Id == ai.PublisherId));
+            }
+            return publishers;
         }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value " + id;
-        }
-
         // POST api/values
         [HttpPost]
         public string Post([FromBody] List<ApplicationInfoRequest> list)
         {
             ApplicationInfoContext dbContext = new ApplicationInfoContext();
-            dbContext.GetService<ILoggerFactory>().AddProvider(new MyLoggerProvider());
             List<Publisher> publishers = new List<Publisher>();
-
-            APIHelpers.UpdateApplicationInfo(list);
-
+            Response.ContentType = "application/json";
+            if (list != null)
+            {
+                APIHelpers.UpdateApplicationInfo(list);
+            }
+            else
+            {
+                return "{error:'list is empty'}";
+            }
             List<string> stringList = list.Select(app => app.Publisher).Distinct().OrderBy(x => x).ToList();
 
             publishers.AddRange(stringList.Select(pub => new Publisher {PublisherName = pub}));
+
+            stringList.Clear();
 
             stringList = list.Select(app => app.PSComputerName).Distinct().OrderBy(x => x).ToList();
             string clientComputerName = stringList.Find(cc => !string.IsNullOrWhiteSpace(cc));
@@ -53,7 +60,7 @@ namespace API.Controllers
             {
                 try
                 {
-
+                    // if Client Computer exists in DB than just change update date, if not htan create new
                     ClientComputer clientComputer =
                         dbContext.ClientComputers.FirstOrDefault(c => c.ComputerName == clientComputerName);
                     if (clientComputer == null)
@@ -72,6 +79,7 @@ namespace API.Controllers
                             dbContext.ApplicationsInfos.Where(ai => ai.ClientComputerId == clientComputer.Id));
                     }
 
+                    // if publisher doesn't exist than create new
                     foreach (Publisher publisher in publishers)
                     {
                         Publisher existedPublisher =
@@ -100,8 +108,10 @@ namespace API.Controllers
                     Console.WriteLine(e);
                 }
             }
+
+
             Console.WriteLine("Ok '" + (list != null ? list.Count.ToString() : "null") + "'");
-            return "Ok '" + (list != null ? list.Count.ToString() : "null") + "'";
+            return "{response:'Ok " + (list != null ? list.Count.ToString() : "null") + "'}";
         }
 
         private static List<ApplicationInfo> GetApplicationInfoLists(List<ApplicationInfoRequest> list, Publisher publisher, ClientComputer clientComputer)
