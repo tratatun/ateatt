@@ -1,4 +1,4 @@
-﻿$username = 'TTN\ttn'
+$username = 'TTN\ttn'
 $password = 'Da1mpDa2mp'
 $compName = 'ttn'
 $APIURL = 'http://atea-api.azurewebsites.net/api/values'
