@@ -1,6 +1,6 @@
-$username = 'TTN\ttn'#$args[0] #'TTN\ttn' #'alexander.nikiforov@softwarium.net'
-$password = 'Da1mpDa2mp'#$args[1] #'Da1mpDa2mp' #'Da1mpDa2mpDa1mp'
-$compName = 'ttn' #$args[2] #'ttn.softwarium.net'
+$username = $args[0]
+$password = $args[1]
+$compName = $args[2]
 $APIURL = 'http://atea-api.azurewebsites.net/api/values'
 $cred = New-Object System.Management.Automation.PSCredential -ArgumentList @($username,(ConvertTo-SecureString -String $password -AsPlainText -Force))
 #$user = Get-Credential
