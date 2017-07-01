@@ -1,6 +1,9 @@
 ﻿$(function() {
+    var applicationInfos = {};
+
     $("datagrid").dxDataGrid({
-        dataSource: applicationInfos,
-        columns:[]
+        dataSource: "Home/GetDataAsync?computerName=ttn",
+        columns: ["publisherName","applicationInfos"]
     });
+
 });

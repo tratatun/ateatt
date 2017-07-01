@@ -20,7 +20,7 @@ namespace API.Controllers
     {
         [HttpGet]
         //[AutoValidateAntiforgeryToken]
-        public IEnumerable<object> Get(string computerName)
+        public IEnumerable<Publisher> Get(string computerName)
         {
             ApplicationInfoContext dbContext = new ApplicationInfoContext();
             ClientComputer comp = dbContext.ClientComputers.FirstOrDefault(x => x.ComputerName == computerName);
@@ -34,7 +34,7 @@ namespace API.Controllers
         }
         // POST api/values
         [HttpPost]
-        public string Post([FromBody] List<ApplicationInfoRequest> list)
+        public JsonResult Post([FromBody] List<ApplicationInfoRequest> list)
         {
             ApplicationInfoContext dbContext = new ApplicationInfoContext();
             List<Publisher> publishers = new List<Publisher>();
@@ -45,8 +45,9 @@ namespace API.Controllers
             }
             else
             {
-                return "{error:'list is empty'}";
+                return Json("{error:'list is empty'}");
             }
+
             List<string> stringList = list.Select(app => app.Publisher).Distinct().OrderBy(x => x).ToList();
 
             publishers.AddRange(stringList.Select(pub => new Publisher {PublisherName = pub}));
@@ -111,7 +112,7 @@ namespace API.Controllers
 
 
             Console.WriteLine("Ok '" + (list != null ? list.Count.ToString() : "null") + "'");
-            return "{response:'Ok " + (list != null ? list.Count.ToString() : "null") + "'}";
+            return Json("{response:'Ok " + (list != null ? list.Count.ToString() : "null") + "'}");
         }
 
         private static List<ApplicationInfo> GetApplicationInfoLists(List<ApplicationInfoRequest> list, Publisher publisher, ClientComputer clientComputer)
