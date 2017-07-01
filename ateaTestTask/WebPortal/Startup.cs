@@ -19,6 +19,7 @@ namespace WebPortal
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -29,6 +30,11 @@ namespace WebPortal
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddOptions();
+
+            // Add our Config object so it can be injected
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
