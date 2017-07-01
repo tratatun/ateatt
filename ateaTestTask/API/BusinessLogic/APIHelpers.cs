@@ -14,6 +14,7 @@ namespace API.BusinessLogic
         {
             appInfoList.ForEach(appInfo =>
             {
+                // Clean up some different names of the same Publishers
                 if (!string.IsNullOrWhiteSpace(appInfo.Publisher) && appInfo.Publisher.IndexOf("microsoft", StringComparison.CurrentCultureIgnoreCase) > -1)
                 {
                     appInfo.Publisher = "Microsoft Corporation";
@@ -22,6 +23,12 @@ namespace API.BusinessLogic
                 {
                     appInfo.Publisher = "Intel Corporation";
                 }
+                if (!string.IsNullOrWhiteSpace(appInfo.Publisher) && appInfo.Publisher.IndexOf("oracle", StringComparison.CurrentCultureIgnoreCase) > -1)
+                {
+                    appInfo.Publisher = "Oracle Corporation";
+                }
+
+                // Deserialize date
                 appInfo.InstallDateParsed = GetInstallDateTime(appInfo.InstallDate);
             });
         }
@@ -31,7 +38,7 @@ namespace API.BusinessLogic
             Regex dateRegex = new Regex(Constants.DATE_FORMAT_REGEX, RegexOptions.Singleline);
             if (!string.IsNullOrWhiteSpace(installDateStr) && dateRegex.IsMatch(installDateStr))
             {
-                return DateTime.ParseExact(installDateStr, Constants.DATE_FORMAT, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(installDateStr, Constants.RECEIVE_DATE_FORMAT, CultureInfo.InvariantCulture);
             }
             return DateTime.MinValue;
         }
