@@ -5,6 +5,6 @@ namespace API.Models
 {
     public class ApplicationInfoResponse : BaseResponse
     {
-        public IEnumerable<Publisher> Publishers { get; set; }
+        public IEnumerable<ApplicationInfoResponseItem> ApplicationInfoList { get; set; }
     }
 }

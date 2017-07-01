@@ -20,13 +20,12 @@ namespace API.Controllers
     public class ValuesController : Controller
     {
         [HttpGet]
-        //[AutoValidateAntiforgeryToken]
         public ApplicationInfoResponse Get(string computerName)
         {
             ApplicationInfoResponse response = new ApplicationInfoResponse
             {
                 StatusCode = Constants.RESPONSE_CODE_OK,
-                Description = Constants.RESPONSE_OK
+                Description = Constants.RESPONSE_OK,
             };
             try
             {
@@ -35,7 +34,26 @@ namespace API.Controllers
                 if (comp != null)
                 {
                     dbContext.Entry(comp).Collection(c => c.ApplicationInfos).Load();
-                    response.Publishers = dbContext.Publishers.Where(p => comp.ApplicationInfos.Any(ai => p.Id == ai.PublisherId));
+                    IQueryable<Publisher> publs= dbContext.Publishers.Where(p => comp.ApplicationInfos.Any(ai => p.Id == ai.PublisherId));
+                    List<ApplicationInfoResponseItem> ApplicationInfoList = new List<ApplicationInfoResponseItem>();
+
+                    foreach (Publisher publisher in publs)
+                    {
+                        ApplicationInfoList.AddRange(publisher.ApplicationInfos.Select(
+                            ai => new ApplicationInfoResponseItem
+                            {
+                                Id = ai.Id,
+                                ClientComputerId = ai.ClientComputerId,
+                                InstallDateString = ai.InstallDate == DateTime.MinValue
+                                    ? string.Empty
+                                    : ai.InstallDate.ToString(Constants.RETURN_DATE_FORMAT),
+                                DisplayVersion = ai.DisplayVersion,
+                                DisplayName = ai.DisplayName,
+                                PublisherId = ai.PublisherId,
+                                PublisherName = publisher.PublisherName
+                            }));
+                    }
+                    response.ApplicationInfoList = ApplicationInfoList;
                 }
             }
             catch (Exception ex)
