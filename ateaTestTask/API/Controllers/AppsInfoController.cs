@@ -12,15 +12,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class AppsInfoController : Controller
     {
+        public IConfiguration _config;
+        public AppsInfoController(IConfiguration config)
+        {
+            _config = config;
+        }
         [HttpGet]
-        public ApplicationInfoResponse Get(string computerName)
+        public ApplicationInfoResponse Get()
         {
             ApplicationInfoResponse response = new ApplicationInfoResponse
             {
@@ -29,17 +35,19 @@ namespace API.Controllers
             };
             try
             {
+                string computerName = _config.GetSection("CumputerName").Value;
                 ApplicationInfoContext dbContext = new ApplicationInfoContext();
                 ClientComputer comp = dbContext.ClientComputers.FirstOrDefault(x => x.ComputerName == computerName);
+
                 if (comp != null)
                 {
                     dbContext.Entry(comp).Collection(c => c.ApplicationInfos).Load();
-                    IQueryable<Publisher> publs= dbContext.Publishers.Where(p => comp.ApplicationInfos.Any(ai => p.Id == ai.PublisherId));
-                    List<ApplicationInfoResponseItem> ApplicationInfoList = new List<ApplicationInfoResponseItem>();
+                    IQueryable<Publisher> publs = dbContext.Publishers.Where(p => comp.ApplicationInfos.Any(ai => p.Id == ai.PublisherId));
+                    List<ApplicationInfoResponseItem> applicationInfoList = new List<ApplicationInfoResponseItem>();
 
                     foreach (Publisher publisher in publs)
                     {
-                        ApplicationInfoList.AddRange(publisher.ApplicationInfos.Select(
+                        applicationInfoList.AddRange(publisher.ApplicationInfos.Select(
                             ai => new ApplicationInfoResponseItem
                             {
                                 Id = ai.Id,
@@ -53,7 +61,7 @@ namespace API.Controllers
                                 PublisherName = publisher.PublisherName
                             }));
                     }
-                    response.ApplicationInfoList = ApplicationInfoList;
+                    response.ApplicationInfoList = applicationInfoList;
                 }
             }
             catch (Exception ex)

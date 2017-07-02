@@ -25,15 +25,20 @@ namespace WebPortal.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetDataAsync(string computerName)
+        public IActionResult PublishersChart()
         {
 
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAppsInfoAsync()
+        {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("User-Agent", ".NET core");
-            string uri = _config.GetSection("RESTService").Value + "?computerName=" + computerName;
+            string uri = _config.GetSection("RESTServiceAppsInfo").Value;
 
             Console.WriteLine("URI: " + uri);
 
@@ -43,6 +48,22 @@ namespace WebPortal.Controllers
             return Json(JsonConvert.DeserializeObject(result));
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetPublishersAsync(int computerId)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET core");
+            string uri = _config.GetSection("RESTServicePublishers").Value;
+
+            Console.WriteLine("URI: " + uri);
+
+            Task<string> task = client.GetStringAsync(uri);
+            string result = await task;
+
+            return Json(JsonConvert.DeserializeObject(result));
+        }
 
         public IActionResult Error()
         {
