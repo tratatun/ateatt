@@ -37,6 +37,7 @@ namespace API
             {
                 option.UseSqlServer(Configuration.GetConnectionString("AppsInfoDb"));//,asm => asm.MigrationsAssembly("DataAccess"));
             });
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +47,7 @@ namespace API
             loggerFactory.AddDebug();
 
             loggerFactory.AddProvider(new MyLoggerProvider());
-
+            app.UseStaticFiles(); 
             app.UseMvc();
         }
     }

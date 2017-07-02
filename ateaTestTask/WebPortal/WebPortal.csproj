@@ -22,4 +22,11 @@
   </ItemGroup>
 
 
+  <ItemGroup>
+    <Content Update="wwwroot/js\site.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+
 </Project>
