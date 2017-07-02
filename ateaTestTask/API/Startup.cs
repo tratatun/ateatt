@@ -46,7 +46,7 @@ namespace API
             loggerFactory.AddDebug();
 
             loggerFactory.AddProvider(new MyLoggerProvider());
-
+            app.UseStaticFiles(); 
             app.UseMvc();
         }
     }
