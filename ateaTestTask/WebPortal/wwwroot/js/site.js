@@ -3,7 +3,7 @@
     var applicationInfos = new DevExpress.data.DataSource ({
         load: function () {
             var def = $.Deferred();
-            $.getJSON("/Home/GetAppsInfoAsync?computerId=2", {})
+            $.getJSON("/Home/GetAppsInfoAsync", {})
                 .done(function (result) {
                     if (result.statusCode != 0) {
                         def.reject("Data Loading Error: " + result.description);
