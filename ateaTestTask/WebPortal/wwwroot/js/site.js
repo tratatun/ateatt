@@ -79,12 +79,11 @@
         }
     });
 
-
-    //$.getJSON('/Home/GetPublishersAsync').publishers;
+    var viewPort = $(window).width();
 
     $("#piechart").dxPieChart({
         size: {
-            width: 600
+            width: viewPort < 400 ? viewPort - 30 : 700
         },
         dataSource: publishers,
         series: {
@@ -108,7 +107,7 @@
         title: "Publishers Chart",
         legend: {
             visible: true, 
-            horizontalAlignment: 'left',
+            horizontalAlignment: viewPort < 400 ? 'center' : 'left',
             
 
         },
