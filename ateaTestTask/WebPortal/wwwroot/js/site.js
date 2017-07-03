@@ -1,29 +1,52 @@
 ﻿$(function () {
-    var publishers = [];
     var applicationInfos = new DevExpress.data.DataSource ({
         load: function () {
             var def = $.Deferred();
-            $.getJSON("/Home/GetAppsInfoAsync?computerId=2", {})
+            $.getJSON("/Home/GetAppsInfoAsync", {})
                 .done(function (result) {
                     if (result.statusCode != 0) {
                         def.reject("Data Loading Error: " + result.description);
                     } else {
                         def.resolve(result.applicationInfoList);
-
+                        $("#clientcomp-header").html("Client computer: " + result.clientComputerName);
+                        $("#lastupdated-header").html("Last Updated: " + result.lastUpdatedString);
                     }
                 });
             return def.promise();
         }
     });
 
-    $("#button-clientcomputer").dxButton({
+    var publishers = new DevExpress.data.DataSource({
+        load: function () {
+            var d = new $.Deferred();
+            $.getJSON('/Home/GetPublishersAsync')
+                .done(function (result) {
+                    if (result) {
+                        if (result.statusCode != 0) {
+                            d.reject("Data Loading Error: " + result.description);
+                        } else {
+                            $("#clientcomp-header").html("Client computer: " + result.clientComputerName);
+                            $("#lastupdated-header").html("Last Updated: " + result.lastUpdatedString);
+                            d.resolve(result.publishers);
+                        }
+                    }
+                });
+            return d.promise();
+        }
+    });
+
+    $("#button-refresh").dxButton({
         text: "Update",
         type: "success",
-        width:"40%",
+        width:"100%",
         onClick: function (ev) {
             DevExpress.ui.notify("Updating...");
             var dataGrid = $('#datagrid').dxDataGrid('instance');
-            dataGrid.refresh();
+            if (dataGrid) {
+                dataGrid.refresh();
+            }
+
+
         }
     });
 
@@ -56,25 +79,57 @@
         }
     });
 
+
+    //$.getJSON('/Home/GetPublishersAsync').publishers;
+
     $("#piechart").dxPieChart({
         size: {
-            width:600
+            width: 600
         },
         dataSource: publishers,
-        series: [
-            {
-                argumentField: "publisherName",
-                valueField: "installDateString",
-                label: {
+        series: {
+            argumentField: "publisherName",
+            valueField: "numberOfApplications",
+            label: {
+                visible: true,
+                connector: {
                     visible: true,
-                    connector: {
-                        visible: true,
-                        width: 1
-                    }
+                    width: 1
+                },
+                customizeText: function(point) {
+                    return point.valueText + " apps";
                 }
+            },
+            smallValuesGrouping: {
+                mode: "smallValueThreshold",
+                threshold: 2
             }
-        ],
-        title: "Publishers",
+        },
+        title: "Publishers Chart",
+        legend: {
+            visible: true, 
+            horizontalAlignment: 'left',
+            
+
+        },
+        onPointClick: function (e) {
+            var point = e.target;
+
+            toggleVisibility(point);
+        },
+        onLegendClick: function (e) {
+            var arg = e.target;
+
+            toggleVisibility(this.getAllSeries()[0].getPointsByArg(arg)[0]);
+        }
+
     });
 
+    function toggleVisibility(item) {
+        if (item.isVisible()) {
+            item.hide();
+        } else {
+            item.show();
+        }
+    }
 });

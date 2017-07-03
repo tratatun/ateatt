@@ -35,9 +35,9 @@ namespace API.Controllers
             };
             try
             {
-                string computerName = _config.GetSection("CumputerName").Value;
+                //string computerName = _config.GetSection("CumputerName").Value;
                 ApplicationInfoContext dbContext = new ApplicationInfoContext();
-                ClientComputer comp = dbContext.ClientComputers.FirstOrDefault(x => x.ComputerName == computerName);
+                ClientComputer comp = dbContext.ClientComputers.OrderBy(cc => cc.LastUpdated).LastOrDefault();
 
                 if (comp != null)
                 {
@@ -62,6 +62,8 @@ namespace API.Controllers
                             }));
                     }
                     response.ApplicationInfoList = applicationInfoList;
+                    response.ClientComputerName = comp.ComputerName;
+                    response.LastUpdatedString = comp.LastUpdated.ToString(Constants.RETURN_DATE_TIME_FORMAT);
                 }
             }
             catch (Exception ex)
@@ -71,7 +73,7 @@ namespace API.Controllers
             }
             return response;
         }
-        // POST api/values
+
         [HttpPost]
         public PostApplicationsResponse Post([FromBody] List<ApplicationInfoRequest> list)
         {
