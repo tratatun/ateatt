@@ -1,0 +1,24 @@
+Steps to run and use projects API and WebPortal:
+- run file 'VirtualPC_script.ps1' powershell script in Administrator mode in client VM
+- run file 'ps_script.ps1' powershell script in Administrator mode with parameters on your server (or hosted) pc this way:
+d:\path\to\file\ps_script.ps1 '[USERNAME]' '[PASSWORD]' '[CLIENT_COMPUTER_NAME]'
+it starts run in loop each 30 minutes. If everything is fine than you will see information in console about how many apps was posted to server or error info. Successful console log looks like this:
+
+applicationInfosPostedCount responseDateTime statusCode description
+--------------------------- ---------------- ---------- -----------
+                        621 2017-07-03 05:03          0 OK         
+                        621 2017-07-03 05:34          0 OK         
+                        621 2017-07-03 06:05          0 OK      
+
+- Server with API used to POST data: http://atea-api.azurewebsites.net/api/appsinfo
+- GET request will return list of installed applications info the most recently posted, sure with information about client computer name and last time update.
+- Every new post of same client computer overwrite existing info, so server don't store deprecated applications info.
+- WebPortal hosted in http://atea-webportal.azurewebsites.net and pretend to cover all task requirements as well as good user experience.
+
+- Code stored in git repository on GitHub https://github.com/tratatun/ateatt . There you could download zip file if you need, I also will attach it to this letter.
+- I used bug tracker https://av-nikiforov.visualstudio.com/ateatt so if you are interrested how I devided this process on subtasks please give me to know I will share credentials
+- if you are interrested in Azure https://portal.azure.com, here trial account credentials:
+login: nikiforov.aleksandEr@gmail.com
+pass: Da1mpDa2mp
+- Both API and WebPortal applications were configured to be deployed every time the appropriate release branch was commited (but it sometimes fails, seems because of azure trial restrictions).
+

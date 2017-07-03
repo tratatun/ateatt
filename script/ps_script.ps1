@@ -3,9 +3,9 @@
 $timeout = new-timespan -Days 30
 $sw = [diagnostics.stopwatch]::StartNew()
 while ($sw.elapsed -lt $timeout){
-    $username = $args[0]
+    $username = $args[0] 
     $password = $args[1]
-    $compName = $args[2]
+    $compName = $args[2] 
     $APIURL = 'http://atea-api.azurewebsites.net/api/appsinfo' 
     $cred = New-Object System.Management.Automation.PSCredential -ArgumentList @($username,(ConvertTo-SecureString -String $password -AsPlainText -Force))
     #$user = Get-Credential
