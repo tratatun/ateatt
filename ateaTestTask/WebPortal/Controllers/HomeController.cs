@@ -49,7 +49,7 @@ namespace WebPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetPublishersAsync(int computerId)
+        public async Task<JsonResult> GetPublishersAsync()
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
