@@ -123,6 +123,7 @@ namespace API.Controllers
             }
 
             response.ApplicationInfosPostedCount = list.Count;
+            response.ResponseDateTime = DateTime.Now.ToString(Constants.RETURN_DATE_TIME_FORMAT);
 
             return response;
         }
